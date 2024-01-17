@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/jogos.jpg" type="image/x-icon" />
+    <title>Jogo da Forca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+      .copyright {
+          font-size: 14px;
+          margin-top: 10px;
+      }
+
+        #word-display {
+            font-size: 24px;
+            margin-bottom: 20px;
+            letter-spacing: 10px;
+        }
+
+        #hangman-image {
+            max-width: 300px;
+            margin: 20px auto;
+        }
+
+        #input-letter {
+            font-size: 18px;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        #guess-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #message {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        #restart-button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Jogo da Forca</h1>
+    <div id="word-display"></div>
+    <img id="hangman-image" src="https://www.w3schools.com/images/hangman_0.png" alt="Hangman">
+    <input type="text" id="input-letter" placeholder="Digite uma letra">
+    <button id="guess-button" onclick="guessLetter()">Adivinhar</button>
+    <div id="message"></div>
+    <button id="restart-button" onclick="startGame()">Reiniciar Jogo</button>
+
+    <script>
+        const words = ['javascript', 'html', 'css', 'developer', 'coding'];
+        let currentWord = '';
+        let guessedLetters = [];
+        let hangmanImageNumber = 0;
+
+        function startGame() {
+            // Escolhe uma palavra aleatória
+            currentWord = words[Math.floor(Math.random() * words.length)];
+
+            // Inicializa as letras adivinhadas
+            guessedLetters = Array(currentWord.length).fill('_');
+
+            // Reinicia a imagem da forca
+            hangmanImageNumber = 0;
+
+            // Exibe a palavra na tela
+            updateWordDisplay();
+
+            // Limpa o campo de entrada
+            document.getElementById('input-letter').value = '';
+
+            // Limpa a mensagem
+            document.getElementById('message').textContent = '';
+
+            // Reinicia a imagem da forca
+            document.getElementById('hangman-image').src = `https://www.w3schools.com/images/hangman_0.png`;
+        }
+
+        function updateWordDisplay() {
+            const wordDisplay = document.getElementById('word-display');
+            wordDisplay.textContent = guessedLetters.join(' ');
+        }
+
+        function guessLetter() {
+            const inputLetter = document.getElementById('input-letter').value.toLowerCase();
+
+            // Verifica se a letra já foi adivinhada
+            if (guessedLetters.includes(inputLetter)) {
+                document.getElementById('message').textContent = 'Você já tentou essa letra. Tente outra.';
+                return;
+            }
+
+            // Verifica se a letra está na palavra
+            if (currentWord.includes(inputLetter)) {
+                // Atualiza as letras adivinhadas
+                for (let i = 0; i < currentWord.length; i++) {
+                    if (currentWord[i] === inputLetter) {
+                        guessedLetters[i] = inputLetter;
+                    }
+                }
+
+                // Verifica se o jogador ganhou
+                if (!guessedLetters.includes('_')) {
+                    document.getElementById('message').textContent = 'Parabéns! Você ganhou!';
+                }
+            } else {
+                // A letra não está na palavra, atualiza a imagem da forca
+                hangmanImageNumber++;
+                document.getElementById('hangman-image').src = `https://www.w3schools.com/images/hangman_${hangmanImageNumber}.png`;
+
+                // Verifica se o jogador perdeu
+                if (hangmanImageNumber === 6) {
+                    document.getElementById('message').textContent = `Você perdeu! A palavra era "${currentWord}".`;
+                }
+            }
+
+            // Atualiza a exibição da palavra
+            updateWordDisplay();
+        }
+
+        // Inicializa o jogo
+        startGame();
+    </script>
+ 
+</body>
+
+</html>
